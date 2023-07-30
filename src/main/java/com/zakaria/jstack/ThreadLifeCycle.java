@@ -2,6 +2,8 @@ package com.zakaria.jstack;
 
 import java.util.concurrent.TimeUnit;
 
+import com.zakaria.utils.Utils;
+
 public class ThreadLifeCycle {
 	
 	/**
@@ -15,38 +17,24 @@ public class ThreadLifeCycle {
 
 	public static void main(String[] args) {
 
-		Thread t1 = new Thread(new Runnable() {
-			public void run() {
-				try {
-					TimeUnit.MINUTES.sleep(10);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
+		Thread t1 = new Thread(() -> {
+			Utils.sleep(TimeUnit.MINUTES, 10);
 		});
 
-		
 		t1.setName("My Thread # 1");
-		t1.start();
 		
-		Thread t2 = new Thread(new Runnable() {
-			public void run() {
-				while(!Thread.interrupted()) {
-					System.out.println("Running");
-				}
+		Thread t2 = new Thread(() -> {
+			while(!Thread.interrupted()) {
+				System.out.println("Running");
 			}
 		});
 		
 		t2.setName("My Thread # 2");
-		t2.start();
 		
+		Utils.joinThreads(t1, t2);
 		
 		// Let's put main thread to sleep as well
-		try {
-			TimeUnit.SECONDS.sleep(30);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		Utils.sleep(TimeUnit.SECONDS, 30);
 		
 		t2.interrupt();
 	}

@@ -1,5 +1,7 @@
 package com.zakaria.synchronization;
 
+import com.zakaria.utils.Utils;
+
 public class Main {
 
 	public static void main(String[] args) {
@@ -7,28 +9,24 @@ public class Main {
 		System.out.println("Counter thread starting...");
 		final Counter counter = new Counter();
 
-		Thread t1 = new Thread(new Runnable() {
-			public void run() {
-				for (int i = 0; i < 300; i++) {
-					counter.increment();
-					sleep();
-				}
+		Thread t1 = new Thread(() -> {
+			for (int i = 0; i < 300; i++) {
+				counter.increment();
+				Utils.sleep(10);
 			}
 		});
 
-		Thread t2 = new Thread(new Runnable() {
-			public void run() {
-				for (int i = 0; i < 300; i++) {
-					counter.decrement();
-					sleep();
-				}
+		Thread t2 = new Thread(() -> {
+			for (int i = 0; i < 300; i++) {
+				counter.decrement();
+				Utils.sleep(10);
 			}
 		});
 
 		long startTime1 = System.nanoTime();
 
-		startThreads(t1, t2);
-		joinThreads(t1, t2);
+		Utils.startThreads(t1, t2);
+		Utils.joinThreads(t1, t2);
 
 		long endTime1 = System.nanoTime();
 		long totalDuration1 = endTime1 - startTime1;
@@ -42,28 +40,24 @@ public class Main {
 		System.out.println("\nSynchronized counter thread starting...");
 		final SynchronizedCounter synchronizedCounter = new SynchronizedCounter();
 
-		Thread t3 = new Thread(new Runnable() {
-			public void run() {
-				for (int i = 0; i < 300; i++) {
-					synchronizedCounter.increment();
-					sleep();
-				}
+		Thread t3 = new Thread(() -> {
+			for (int i = 0; i < 300; i++) {
+				synchronizedCounter.increment();
+				Utils.sleep(10);
 			}
 		});
 
-		Thread t4 = new Thread(new Runnable() {
-			public void run() {
-				for (int i = 0; i < 300; i++) {
-					synchronizedCounter.decrement();
-					sleep();
-				}
+		Thread t4 = new Thread(() -> {
+			for (int i = 0; i < 300; i++) {
+				synchronizedCounter.decrement();
+				Utils.sleep(10);
 			}
 		});
 
 		long startTime2 = System.nanoTime();
 
-		startThreads(t3, t4);
-		joinThreads(t3, t4);
+		Utils.startThreads(t3, t4);
+		Utils.joinThreads(t3, t4);
 
 		long endTime2 = System.nanoTime();
 		long totalDuration2 = endTime2 - startTime2;
@@ -78,28 +72,24 @@ public class Main {
 		System.out.println("\nSynchronizedLock counter thread starting...");
 		final SynchronizedLockCounter synchronizedLockCounter = new SynchronizedLockCounter();
 
-		Thread t5 = new Thread(new Runnable() {
-			public void run() {
-				for (int i = 0; i < 300; i++) {
-					synchronizedLockCounter.increment();
-					sleep();
-				}
+		Thread t5 = new Thread(() -> {
+			for (int i = 0; i < 300; i++) {
+				synchronizedLockCounter.increment();
+				Utils.sleep(10);
 			}
 		});
 
-		Thread t6 = new Thread(new Runnable() {
-			public void run() {
-				for (int i = 0; i < 300; i++) {
-					synchronizedLockCounter.decrement();
-					sleep();
-				}
+		Thread t6 = new Thread(() -> {
+			for (int i = 0; i < 300; i++) {
+				synchronizedLockCounter.decrement();
+				Utils.sleep(10);
 			}
 		});
 
 		long startTime3 = System.nanoTime();
 
-		startThreads(t5, t6);
-		joinThreads(t5, t6);
+		Utils.startThreads(t5, t6);
+		Utils.joinThreads(t5, t6);
 
 		long endTime3 = System.nanoTime();
 		long totalDuration3 = endTime3 - startTime3;
@@ -114,28 +104,24 @@ public class Main {
 		System.out.println("\nReentrantLock counter thread starting...");
 		final ReentrantLockCounter reentrantLockCounter = new ReentrantLockCounter();
 
-		Thread t7 = new Thread(new Runnable() {
-			public void run() {
-				for (int i = 0; i < 300; i++) {
-					reentrantLockCounter.increment();
-					sleep();
-				}
+		Thread t7 = new Thread(() -> {
+			for (int i = 0; i < 300; i++) {
+				reentrantLockCounter.increment();
+				Utils.sleep(10);
 			}
 		});
 
-		Thread t8 = new Thread(new Runnable() {
-			public void run() {
-				for (int i = 0; i < 300; i++) {
-					reentrantLockCounter.decrement();
-					sleep();
-				}
+		Thread t8 = new Thread(() -> {
+			for (int i = 0; i < 300; i++) {
+				reentrantLockCounter.decrement();
+				Utils.sleep(10);
 			}
 		});
 
 		long startTime4 = System.nanoTime();
 
-		startThreads(t7, t8);
-		joinThreads(t7, t8);
+		Utils.startThreads(t7, t8);
+		Utils.joinThreads(t7, t8);
 
 		long endTime4 = System.nanoTime();
 		long totalDuration4 = endTime4 - startTime4;
@@ -144,31 +130,5 @@ public class Main {
 		System.out.println("ReentrantLock Duration: " + totalDuration4 + " nano second");
 		System.out.println("Difference of reentrantLock duration: " + (totalDuration4 - totalDuration1) + " nano second");
 
-	}
-
-	private static void startThreads(Thread... threads) {
-		for (Thread thread : threads) {
-			thread.start();
-		}
-	}
-
-	private static void joinThreads(Thread... threads) {
-		try {
-			for (Thread thread : threads) {
-				thread.join();
-			}
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
-			throw new AssertionError(e);
-		}
-	}
-
-	private static void sleep() {
-		try {
-			Thread.sleep(10);
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
-			throw new AssertionError(e);
-		}
 	}
 }
